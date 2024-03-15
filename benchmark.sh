@@ -17,8 +17,14 @@ base_command () {
 }
 
 run_banchmark() {
+    if [ -d benchmark ]; then 
+        date=$(date '+%Y%m%d_%H%M%S')
+        mkdir -p bench_backup
+        mv benchmark bench_backup
+        mv bench_backup/benchmark bench_backup/"bench_${date}"
+    fi
     mkdir -p benchmark
-    rm -f benchmark/result.txt
+    # rm -f benchmark/result.txt
 
     for i in "${options[@]}";
     do
