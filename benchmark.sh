@@ -22,13 +22,13 @@ run_banchmark() {
 
     for i in "${options[@]}";
     do
-        touch temp.txt && (time base_command -v ${i} -m 987) &>> temp.txt
+        # add "-m index (for base_command)" to manual set index of a minimal value
+        touch temp.txt && (time base_command -v ${i}) &>> temp.txt
         threads=$(cat temp.txt | awk '/Threads:/ {print $2}')
         length=$(cat temp.txt | awk '/Arr length:/ {print $3}')
         filename="benchmark/${threads}_${length}.txt"
         cat temp.txt | awk '/real/ {print $2}' >> ${filename}
-        awk 'gsub(",", ".")' ${filename} | awk -v file=${filename} -F '[m]' '{sum+=$1*60+$2} END {printf "%s = %.5f s\n", file, sum/NR}' 1>> benchmark/result.txt
-
+        awk 'gsub(",", ".")' ${filename} | awk -v file=${filename} -F '[m]' '{sum+=$1*60+$2} END {printf "%s = %.5f s\n", file, sum/NR}' >> benchmark/result.txt
         rm temp.txt
     done
 }
